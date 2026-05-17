@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>MegaText</title>
+  <style>
+    :root {
+      --bg: #111827;
+      --panel: #1f2937;
+      --text: #ffffff;
+      --muted: #9ca3af;
+      --accent: #38bdf8;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      display: flex;
+      flex-direction: column;
+    }
+
+    .controls {
+      padding: 16px;
+      background: var(--panel);
+      display: grid;
+      gap: 12px;
+      grid-template-columns: minmax(280px, 1fr) auto auto auto;
+      align-items: center;
+      box-shadow: 0 4px 18px rgba(0, 0, 0, 0.25);
+    }
+
+    textarea {
+      width: 100%;
+      min-height: 90px;
+      resize: vertical;
+      padding: 14px 16px;
+      border-radius: 12px;
+      border: 2px solid transparent;
+      font-size: 18px;
+      outline: none;
+      font-family: inherit;
+    }
+
+    textarea:focus {
+      border-color: var(--accent);
+    }
+
+    
+    button {
+      padding: 14px 18px;
+      border: 0;
+      border-radius: 12px;
+      background: var(--accent);
+      color: #082f49;
+      font-weight: 700;
+      font-size: 16px;
+      cursor: pointer;
+    }
+
+    button.secondary {
+      background: #374151;
+      color: white;
+    }
+
+    label {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      color: var(--muted);
+      font-size: 14px;
+      white-space: nowrap;
+    }
+
+    input[type="range"] {
+      width: 140px;
+    }
+
+    .display {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 32px;
+      text-align: center;
+      overflow: hidden;
+    }
+
+    #bigText {
+      font-size: clamp(48px, 12vw, 180px);
+      line-height: 1.05;
+      font-weight: 900;
+      letter-spacing: 0.02em;
+      white-space: pre;
+      word-break: keep-all;
+    }
+
+    .fullscreen .controls {
+      display: none;
+    }
+
+    .fullscreen .display {
+      min-height: 100vh;
+      cursor: pointer;
+    }
+
+    .light {
+      --bg: #ffffff;
+      --panel: #f3f4f6;
+      --text: #111827;
+      --muted: #4b5563;
+    }
+
+    footer {
+      text-align: center;
+      padding: 10px 16px 18px;
+      font-size: 12px;
+      color: var(--muted);
+    }
+	
+    footer a {
+      color: #fde68a;
+      text-decoration: none;
+    }
+
+    .light footer a {
+      color: var(--accent);
+    }
+
+    footer a:hover {
+      text-decoration: underline;
+    }
+
+    .fullscreen footer {
+      display: none;
+    }
+
+    @media (max-width: 760px) {
+      .controls {
+        grid-template-columns: 1fr;
+      }
+
+      input[type="range"] {
+        width: 100%;
+      }  
+    }
+  </style>
+</head>
+<body>
+  <div class="controls">
+    <textarea id="textInput" placeholder="Napište text, např. Wi‑Fi: MojeSíť&#10;Heslo: 12345678"></textarea>
+
+    <label>
+      Velikost písma
+      <input id="sizeInput" type="range" min="40" max="320" value="220" />
+    </label>
+
+    <button id="themeButton" class="secondary">Světlý režim</button>
+    <button id="fullscreenButton">Celá obrazovka</button>
+  </div>
+
+  <main class="display" id="displayArea" title="Kliknutím ukončíte režim celé obrazovky">
+    <div id="bigText"></div>
+  </main>
+
+  <footer>
+    <p>Vytvořil a provozuje <a href="https://manena.info">Václav Maněna</a>. Jestli chcete, <a href="https://buymeacoffee.com/vmanena">kupte mu kafe</a>.</p> 
+	<p><a href="about.html">O aplikaci a nápověda</a></p>
+  </footer>
+
+  <script>
+    const textInput = document.getElementById('textInput');
+    const sizeInput = document.getElementById('sizeInput');
+    const bigText = document.getElementById('bigText');
+    const fullscreenButton = document.getElementById('fullscreenButton');
+    const themeButton = document.getElementById('themeButton');
+    const displayArea = document.getElementById('displayArea');
+
+    function fitText() {
+      const maxSize = Number(sizeInput.value);
+      const minSize = 24;
+
+      let fontSize = maxSize;
+      bigText.style.fontSize = `${fontSize}px`;
+
+      while (
+        fontSize > minSize &&
+        (
+          bigText.scrollWidth > displayArea.clientWidth - 40 ||
+          bigText.scrollHeight > displayArea.clientHeight - 40
+        )
+      ) {
+        fontSize -= 2;
+        bigText.style.fontSize = `${fontSize}px`;
+      }
+    }
+
+    function updateText() {
+      bigText.innerText = textInput.value || 'MegaText.cz';
+      fitText();
+    }
+
+    function updateSize() {
+      fitText();
+    }
+
+    textInput.addEventListener('input', updateText);
+    sizeInput.addEventListener('input', updateSize);
+
+    fullscreenButton.addEventListener('click', async () => {
+      document.body.classList.add('fullscreen');
+
+      if (document.documentElement.requestFullscreen) {
+        try {
+          await document.documentElement.requestFullscreen();
+        } catch (error) {
+          // Prohlížeč může fullscreen zablokovat. Stránka i tak skryje ovládání.
+        }
+      }
+    });
+
+    displayArea.addEventListener('click', async () => {
+      if (document.body.classList.contains('fullscreen')) {
+        document.body.classList.remove('fullscreen');
+
+        if (document.fullscreenElement && document.exitFullscreen) {
+          await document.exitFullscreen();
+        }
+      }
+    });
+
+    themeButton.addEventListener('click', () => {
+      document.body.classList.toggle('light');
+      themeButton.textContent = document.body.classList.contains('light')
+        ? 'Tmavý režim'
+        : 'Světlý režim';
+
+      fitText();
+    });
+
+    window.addEventListener('resize', fitText);
+
+    updateText();
+    updateSize();
+  </script>
+</body>
+</html>

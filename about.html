@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>MegaText: O aplikaci</title>
+
+  <style>
+    :root {
+      --bg: #111827;
+      --panel: #1f2937;
+      --text: #ffffff;
+      --muted: #9ca3af;
+      --accent: #38bdf8;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      display: flex;
+      flex-direction: column;
+    }
+
+    .container {
+      width: 100%;
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 48px 24px;
+      flex: 1;
+    }
+
+    .card {
+      background: var(--panel);
+      border-radius: 24px;
+      padding: 36px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.25);
+    }
+
+    h1 {
+      margin-top: 0;
+      margin-bottom: 24px;
+      font-size: clamp(36px, 6vw, 64px);
+      line-height: 1.1;
+    }
+
+    p {
+      margin: 0 0 18px;
+      font-size: 20px;
+      line-height: 1.7;
+      color: var(--muted);
+    }
+
+    a {
+      color: #fde68a;
+      text-decoration: none;
+    }
+
+    a:hover {
+      text-decoration: underline;
+    }
+
+  
+    .actions {
+      display: flex;
+      justify-content: center;
+      margin-top: 24px;
+    }
+
+    button {
+      padding: 12px 18px;
+      border: 0;
+      border-radius: 12px;
+      background: var(--accent);
+      color: #082f49;
+      font-weight: 700;
+      font-size: 16px;
+      cursor: pointer;
+    }
+
+    @media (max-width: 700px) {
+      .container {
+        padding: 24px 16px;
+      }
+
+      .card {
+        padding: 24px;
+      }
+
+      p {
+        font-size: 18px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <section class="card">
+      <h1>O aplikaci</h1>
+      <p>
+	    Tlačítko <b>Celá obrazovka</b> zobrazí text přes celou obrazovku. <b>Režim celé obrazovky ukončíte kliknutím na libovolné místo.</b>
+      </p>
+	  <p>
+	    Aplikace funguje i offline, stačí stáhnout stránku <a href="index.html">megatext.cz</a>. Je dostupná pod <a href="https://wtfpl.cz">licencí WTFPL</a>. 
+	  </p>
+	  <p>
+       Jmenuji se <a href="https://manena.info">Václav Maněna</a> a tuto stránku jsem vytvořil jako podporu pro svou práci učitele a lektora. Budu rád, když pomůže i vám. Jestli mě chcete podpořit, kupte mi kafe. Čas, doména a hosting nejsou úplně zadarmo. 😀
+      </p>
+	  <a href="https://www.buymeacoffee.com/vmanena"><img src="https://img.buymeacoffee.com/button-api/?text=Kupte&nbsp;mi&nbsp;kafe&emoji=☕&slug=vmanena&button_colour=FFDD00&font_colour=000000&font_family=Inter&outline_colour=000000&coffee_colour=ffffff" alt="Kupte mi kafe" /></a>
+    </section>
+
+    <div class="actions">
+      <button onclick="window.location.href='index.html'">
+        Zpět do aplikace
+      </button>
+    </div>
+  </div>
+
+  
+</body>
+</html>

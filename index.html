@@ -11,6 +11,8 @@
       --text: #ffffff;
       --muted: #9ca3af;
       --accent: #38bdf8;
+      --qr-size: 220px;
+      --qr-margin: 24px;
     }
 
     * {
@@ -37,11 +39,15 @@
       box-shadow: 0 4px 18px rgba(0, 0, 0, 0.25);
     }
 
+    .textBox {
+      position: relative;
+    }
+
     textarea {
       width: 100%;
       min-height: 90px;
       resize: vertical;
-      padding: 14px 16px;
+      padding: 14px 46px 14px 16px;
       border-radius: 12px;
       border: 2px solid transparent;
       font-size: 18px;
@@ -53,7 +59,31 @@
       border-color: var(--accent);
     }
 
-    
+    .clearTextButton {
+      position: absolute;
+      top: 8px;
+      right: 8px;
+      width: 30px;
+      height: 30px;
+      padding: 0;
+      border-radius: 50%;
+      background: rgba(17, 24, 39, 0.14);
+      color: #111827;
+      font-size: 22px;
+      line-height: 1;
+      display: none;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .clearTextButton.visible {
+      display: flex;
+    }
+
+    .clearTextButton:hover {
+      background: rgba(17, 24, 39, 0.28);
+    }
+
     button {
       padding: 14px 18px;
       border: 0;
@@ -84,6 +114,7 @@
     }
 
     .display {
+      position: relative;
       flex: 1;
       display: flex;
       align-items: center;
@@ -100,6 +131,115 @@
       letter-spacing: 0.02em;
       white-space: pre;
       word-break: keep-all;
+    }
+
+    .dynamicPart {
+      color: var(--accent);
+      text-shadow: 0 0 0.08em rgba(56, 189, 248, 0.35);
+    }
+
+    .qrOverlay {
+      position: absolute;
+      z-index: 5;
+      display: none;
+      flex-direction: column;
+      gap: 12px;
+      max-width: min(80vw, 520px);
+      touch-action: none;
+      -webkit-user-select: none;
+      user-select: none;
+    }
+
+    .qrOverlay.visible {
+      display: flex;
+    }
+
+    .qrOverlay.pos-top-right {
+      top: var(--qr-margin);
+      right: var(--qr-margin);
+      align-items: flex-end;
+    }
+
+    .qrOverlay.pos-top-left {
+      top: var(--qr-margin);
+      left: var(--qr-margin);
+      align-items: flex-start;
+    }
+
+    .qrOverlay.pos-bottom-right {
+      right: var(--qr-margin);
+      bottom: var(--qr-margin);
+      align-items: flex-end;
+    }
+
+    .qrOverlay.pos-bottom-left {
+      left: var(--qr-margin);
+      bottom: var(--qr-margin);
+      align-items: flex-start;
+    }
+
+    .qrItem {
+      width: var(--qr-size);
+      max-width: min(80vw, 520px);
+      padding: 10px;
+      border-radius: 16px;
+      background: white;
+      color: #111827;
+      box-shadow: 0 12px 38px rgba(0, 0, 0, 0.35);
+      cursor: grab;
+    }
+
+    .qrItem:active {
+      cursor: grabbing;
+    }
+
+    .qrItem svg {
+      display: block;
+      width: 100%;
+      height: auto;
+    }
+
+    .qrError {
+      padding: 12px;
+      font-size: 14px;
+      line-height: 1.35;
+      color: #7f1d1d;
+      background: #fee2e2;
+      border-radius: 10px;
+    }
+
+    .qrResizeHandle {
+      position: absolute;
+      width: 24px;
+      height: 24px;
+      border-radius: 50%;
+      border: 3px solid var(--accent);
+      background: white;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.35);
+    }
+
+    .qrOverlay.pos-top-right .qrResizeHandle {
+      left: -10px;
+      bottom: -10px;
+      cursor: nesw-resize;
+    }
+
+    .qrOverlay.pos-top-left .qrResizeHandle {
+      right: -10px;
+      bottom: -10px;
+      cursor: nwse-resize;
+    }
+
+    .qrOverlay.pos-bottom-right .qrResizeHandle {
+      left: -10px;
+      top: -10px;
+      cursor: nwse-resize;
+    }
+
+    .qrOverlay.pos-bottom-left .qrResizeHandle {
+      right: -10px;
+      top: -10px;
+      cursor: nesw-resize;
     }
 
     .fullscreen .controls {
@@ -124,7 +264,7 @@
       font-size: 12px;
       color: var(--muted);
     }
-	
+
     footer a {
       color: #fde68a;
       text-decoration: none;
@@ -149,13 +289,16 @@
 
       input[type="range"] {
         width: 100%;
-      }  
+      }
     }
   </style>
 </head>
 <body>
   <div class="controls">
-    <textarea id="textInput" placeholder="Napište text, např. Wi‑Fi: MojeSíť&#10;Heslo: 12345678"></textarea>
+    <div class="textBox">
+      <textarea id="textInput" placeholder="Napište text, např. Wi‑Fi: MojeSíť&#10;Heslo: 12345678&#10;Přednáška začne za @cd:9:55&#10;Dotazník @qr;Programko.NET!"></textarea>
+      <button id="clearTextButton" class="clearTextButton" type="button" aria-label="Vymazat text" title="Vymazat text">×</button>
+    </div>
 
     <label>
       Velikost písma
@@ -168,13 +311,30 @@
 
   <main class="display" id="displayArea" title="Kliknutím ukončíte režim celé obrazovky">
     <div id="bigText"></div>
+    <div id="qrOverlay" class="qrOverlay pos-top-right" title="Přetažením změníte roh. Tažením za kolečko změníte velikost.">
+      <div id="qrItems"></div>
+      <div id="qrResizeHandle" class="qrResizeHandle" title="Změnit velikost QR kódu"></div>
+    </div>
   </main>
 
   <footer>
-    <p>Vytvořil a provozuje <a href="https://manena.info">Václav Maněna</a>. Jestli chcete, <a href="https://buymeacoffee.com/vmanena">kupte mu kafe</a>.</p> 
-	<p><a href="about.html">O aplikaci a nápověda</a></p>
+    <p>Vytvořil a provozuje <a href="https://manena.info">Václav Maněna</a>. Jestli chcete, <a href="https://buymeacoffee.com/vmanena">kupte mu kafe</a>.</p>
+    <p><a href="about.html">O aplikaci a nápověda</a></p>
   </footer>
 
+  <!--
+    QR knihovna:
+    - Pro plně offline provoz stáhněte soubor
+      https://cdn.jsdelivr.net/npm/qrcode-generator@2.0.4/dist/qrcode.js
+      a uložte jej vedle index.html jako qrcode.js.
+    - Pokud lokální soubor chybí a je dostupný internet, načte se stejná verze z jsDelivr.
+  -->
+  <script src="qrcode.js"></script>
+  <script>
+    if (typeof qrcode !== 'function') {
+      document.write('<script src="https://cdn.jsdelivr.net/npm/qrcode-generator@2.0.4/dist/qrcode.min.js"><\/script>');
+    }
+  </script>
   <script>
     const textInput = document.getElementById('textInput');
     const sizeInput = document.getElementById('sizeInput');
@@ -182,6 +342,39 @@
     const fullscreenButton = document.getElementById('fullscreenButton');
     const themeButton = document.getElementById('themeButton');
     const displayArea = document.getElementById('displayArea');
+    const clearTextButton = document.getElementById('clearTextButton');
+    const qrOverlay = document.getElementById('qrOverlay');
+    const qrItems = document.getElementById('qrItems');
+    const qrResizeHandle = document.getElementById('qrResizeHandle');
+
+    const STORAGE_TEXT_KEY = 'MegaText.text';
+    const STORAGE_QR_POSITION_KEY = 'MegaText.qrPosition';
+    const STORAGE_QR_SIZE_KEY = 'MegaText.qrSize';
+    const DEFAULT_TEXT = 'MegaText.cz';
+    const QR_MIN_SIZE = 90;
+    const QR_MAX_SIZE = 520;
+
+    let dynamicParts = [];
+    let clockTimer = null;
+    let qrPosition = localStorage.getItem(STORAGE_QR_POSITION_KEY) || 'top-right';
+    let qrSize = Number(localStorage.getItem(STORAGE_QR_SIZE_KEY)) || 220;
+
+    function clamp(value, min, max) {
+      return Math.min(Math.max(value, min), max);
+    }
+
+    function setQrPosition(position) {
+      qrPosition = position;
+      qrOverlay.classList.remove('pos-top-right', 'pos-top-left', 'pos-bottom-right', 'pos-bottom-left');
+      qrOverlay.classList.add(`pos-${position}`);
+      localStorage.setItem(STORAGE_QR_POSITION_KEY, position);
+    }
+
+    function setQrSize(size) {
+      qrSize = clamp(size, QR_MIN_SIZE, QR_MAX_SIZE);
+      document.documentElement.style.setProperty('--qr-size', `${qrSize}px`);
+      localStorage.setItem(STORAGE_QR_SIZE_KEY, String(qrSize));
+    }
 
     function fitText() {
       const maxSize = Number(sizeInput.value);
@@ -202,17 +395,495 @@
       }
     }
 
-    function updateText() {
-      bigText.innerText = textInput.value || 'MegaText.cz';
+    function scheduleFitText() {
+      requestAnimationFrame(fitText);
+    }
+
+    function updateClearButton() {
+      clearTextButton.classList.toggle('visible', textInput.value.length > 0);
+    }
+
+    function appendText(parent, value) {
+      if (value) {
+        parent.appendChild(document.createTextNode(value));
+      }
+    }
+
+    function readQuotedValue(text, startIndex) {
+      const pairs = {
+        "'": "'",
+        '"': '"',
+        '‘': '’',
+        '‚': '‘',
+        '“': '”',
+        '„': '“'
+      };
+
+      const opener = text[startIndex];
+      const closer = pairs[opener];
+
+      if (!closer) {
+        return null;
+      }
+
+      let value = '';
+
+      for (let i = startIndex + 1; i < text.length; i++) {
+        const char = text[i];
+
+        if (char === '\\' && i + 1 < text.length) {
+          value += text[i + 1];
+          i++;
+          continue;
+        }
+
+        if (char === closer) {
+          return {
+            value,
+            end: i + 1
+          };
+        }
+
+        value += char;
+      }
+
+      return null;
+    }
+
+    function parseUnquotedQr(text, startIndex) {
+      let end = startIndex;
+
+      while (end < text.length && !/\s/.test(text[end])) {
+        end++;
+      }
+
+      let value = text.slice(startIndex, end);
+      let showInText = false;
+
+      if (value.endsWith('!')) {
+        showInText = true;
+        value = value.slice(0, -1);
+      }
+
+      while (value.length > 0 && /[.,;)]$/.test(value)) {
+        end--;
+        value = value.slice(0, -1);
+      }
+
+      return {
+        value,
+        showInText,
+        end
+      };
+    }
+
+    function parseQrCode(text, startIndex) {
+      if (!text.startsWith('@qr:', startIndex) && !text.startsWith('@qr;', startIndex)) {
+        return null;
+      }
+
+      const valueStart = startIndex + 4;
+      const quoted = readQuotedValue(text, valueStart);
+
+      if (quoted) {
+        let showInText = false;
+        let end = quoted.end;
+        let value = quoted.value;
+
+        if (text[end] === '!') {
+          showInText = true;
+          end++;
+        }
+
+        return {
+          type: 'qr',
+          value,
+          showInText,
+          end
+        };
+      }
+
+      const parsed = parseUnquotedQr(text, valueStart);
+
+      if (!parsed.value) {
+        return null;
+      }
+
+      return {
+        type: 'qr',
+        ...parsed
+      };
+    }
+
+    function parseTimeCode(text, startIndex, type) {
+      const prefix = `@${type}:`;
+
+      if (!text.startsWith(prefix, startIndex)) {
+        return null;
+      }
+
+      const valueStart = startIndex + prefix.length;
+      const quoted = readQuotedValue(text, valueStart);
+      let rawValue;
+      let end;
+
+      if (quoted) {
+        rawValue = quoted.value.trim();
+        end = quoted.end;
+      } else {
+        const match = text.slice(valueStart).match(/^\d{1,2}:\d{1,2}(?::\d{1,2})?/);
+
+        if (!match) {
+          return null;
+        }
+
+        rawValue = match[0];
+        end = valueStart + rawValue.length;
+      }
+
+      const parsed = parseTimeValue(rawValue);
+
+      if (!parsed) {
+        return null;
+      }
+
+      return {
+        type,
+        ...parsed,
+        end
+      };
+    }
+
+    function parseTimeValue(rawValue) {
+      let timeText = rawValue.trim();
+      let format = null;
+      const firstParenthesis = timeText.indexOf('(');
+
+      if (firstParenthesis > 0 && timeText.endsWith(')')) {
+        format = timeText.slice(firstParenthesis + 1, -1);
+        timeText = timeText.slice(0, firstParenthesis).trim();
+      }
+
+      const parts = timeText.split(':').map(part => Number(part));
+
+      if (
+        (parts.length !== 2 && parts.length !== 3) ||
+        parts.some(part => !Number.isInteger(part))
+      ) {
+        return null;
+      }
+
+      const [hours, minutes, seconds = 0] = parts;
+
+      if (hours < 0 || hours > 23 || minutes < 0 || minutes > 59 || seconds < 0 || seconds > 59) {
+        return null;
+      }
+
+      return {
+        hours,
+        minutes,
+        seconds,
+        format
+      };
+    }
+
+    function parseNextCode(text, startIndex) {
+      return parseTimeCode(text, startIndex, 'cd') ||
+        parseTimeCode(text, startIndex, 'sw') ||
+        parseQrCode(text, startIndex);
+    }
+
+    function createDynamicSpan(part) {
+      const span = document.createElement('span');
+      span.className = 'dynamicPart';
+      part.element = span;
+      dynamicParts.push(part);
+      return span;
+    }
+
+    function renderText() {
+      const text = textInput.value || DEFAULT_TEXT;
+      bigText.replaceChildren();
+      dynamicParts = [];
+      const qrValues = [];
+      let lastIndex = 0;
+      let index = 0;
+
+      while (index < text.length) {
+        const atIndex = text.indexOf('@', index);
+
+        if (atIndex === -1) {
+          break;
+        }
+
+        const part = parseNextCode(text, atIndex);
+
+        if (!part) {
+          index = atIndex + 1;
+          continue;
+        }
+
+        appendText(bigText, text.slice(lastIndex, atIndex));
+
+        if (part.type === 'cd' || part.type === 'sw') {
+          bigText.appendChild(createDynamicSpan(part));
+        } else if (part.type === 'qr') {
+          qrValues.push(normalizeUrlForQr(part.value, part.showInText));
+          if (part.showInText) {
+            appendText(bigText, part.value);
+          }
+        }
+
+        lastIndex = part.end;
+        index = part.end;
+      }
+
+      appendText(bigText, text.slice(lastIndex));
+      renderQrCodes(qrValues);
+      updateDynamicParts();
+      updateClockTimer();
       fitText();
+    }
+
+    function formatSeconds(totalSeconds, format) {
+      const seconds = Math.max(0, Math.floor(totalSeconds));
+      const totalHours = Math.floor(seconds / 3600);
+      const totalMinutes = Math.floor(seconds / 60);
+      const minutes = Math.floor((seconds % 3600) / 60);
+      const secondsPart = seconds % 60;
+      const pad2 = value => String(value).padStart(2, '0');
+
+      if (format) {
+        return format
+          .replaceAll('&HH', pad2(totalHours))
+          .replaceAll('&H', String(totalHours))
+          .replaceAll('&MM', pad2(totalMinutes))
+          .replaceAll('&M', String(totalMinutes))
+          .replaceAll('&mm', pad2(minutes))
+          .replaceAll('&m', String(minutes))
+          .replaceAll('&ss', pad2(secondsPart))
+          .replaceAll('&s', String(secondsPart));
+      }
+
+      if (totalHours > 0) {
+        return `${totalHours}:${pad2(minutes)}:${pad2(secondsPart)}`;
+      }
+
+      return `${totalMinutes}:${pad2(secondsPart)}`;
+    }
+
+    function getSecondsFromMidnight(date) {
+      return date.getHours() * 3600 + date.getMinutes() * 60 + date.getSeconds();
+    }
+
+    function getTargetSeconds(part) {
+      return part.hours * 3600 + part.minutes * 60 + part.seconds;
+    }
+
+    function getCountdownSeconds(part, now) {
+      const nowSeconds = getSecondsFromMidnight(now);
+      const targetSeconds = getTargetSeconds(part);
+      const daySeconds = 24 * 60 * 60;
+      const futureSeconds = (targetSeconds - nowSeconds + daySeconds) % daySeconds;
+      const pastSeconds = (nowSeconds - targetSeconds + daySeconds) % daySeconds;
+
+      return futureSeconds < pastSeconds ? futureSeconds : 0;
+    }
+
+    function getStopwatchSeconds(part, now) {
+      const nowSeconds = getSecondsFromMidnight(now);
+      const startSeconds = getTargetSeconds(part);
+      const daySeconds = 24 * 60 * 60;
+      const pastSeconds = (nowSeconds - startSeconds + daySeconds) % daySeconds;
+      const futureSeconds = (startSeconds - nowSeconds + daySeconds) % daySeconds;
+
+      return pastSeconds < futureSeconds ? pastSeconds : 0;
+    }
+
+    function updateDynamicParts() {
+      if (dynamicParts.length === 0) {
+        return;
+      }
+
+      const now = new Date();
+
+      for (const part of dynamicParts) {
+        const seconds = part.type === 'cd'
+          ? getCountdownSeconds(part, now)
+          : getStopwatchSeconds(part, now);
+
+        part.element.textContent = formatSeconds(seconds, part.format);
+      }
+
+      scheduleFitText();
+    }
+
+    function updateClockTimer() {
+      if (clockTimer && dynamicParts.length === 0) {
+        clearInterval(clockTimer);
+        clockTimer = null;
+        return;
+      }
+
+      if (!clockTimer && dynamicParts.length > 0) {
+        clockTimer = setInterval(updateDynamicParts, 1000);
+      }
+    }
+
+    function normalizeUrlForQr(value, showInText) {
+      if (!showInText) {
+        return value;
+      }
+
+      if (/^[a-z][a-z0-9+.-]*:/i.test(value)) {
+        return value;
+      }
+
+      return `https://${value}`;
+    }
+
+    function renderQrCodes(qrValues) {
+      qrItems.replaceChildren();
+
+      if (qrValues.length === 0) {
+        qrOverlay.classList.remove('visible');
+        return;
+      }
+
+      qrOverlay.classList.add('visible');
+
+      for (const rawValue of qrValues) {
+        const item = document.createElement('div');
+        item.className = 'qrItem';
+        item.title = rawValue;
+        item.setAttribute('role', 'img');
+        item.setAttribute('aria-label', `QR kód: ${rawValue}`);
+
+        try {
+          if (typeof qrcode !== 'function') {
+            throw new Error('QR knihovna se nepodařila načíst. Pro offline provoz uložte soubor qrcode.js vedle index.html, nebo zkontrolujte připojení k internetu.');
+          }
+
+          const qr = qrcode(0, 'M');
+          qr.addData(rawValue);
+          qr.make();
+          item.innerHTML = qr.createSvgTag({ cellSize: 8, margin: 0, scalable: true });
+        } catch (error) {
+          const errorBox = document.createElement('div');
+          errorBox.className = 'qrError';
+          errorBox.textContent = error.message || 'QR kód se nepodařilo vytvořit.';
+          item.appendChild(errorBox);
+        }
+
+        qrItems.appendChild(item);
+      }
+    }
+
+    function updateText() {
+      if (textInput.value) {
+        localStorage.setItem(STORAGE_TEXT_KEY, textInput.value);
+      } else {
+        localStorage.removeItem(STORAGE_TEXT_KEY);
+      }
+
+      updateClearButton();
+      renderText();
     }
 
     function updateSize() {
       fitText();
     }
 
+    function getCornerFromPointer(event) {
+      const rect = displayArea.getBoundingClientRect();
+      const x = event.clientX - rect.left;
+      const y = event.clientY - rect.top;
+      const horizontal = x < rect.width / 2 ? 'left' : 'right';
+      const vertical = y < rect.height / 2 ? 'top' : 'bottom';
+      return `${vertical}-${horizontal}`;
+    }
+
+    function startQrDrag(event) {
+      if (event.target === qrResizeHandle) {
+        return;
+      }
+
+      event.preventDefault();
+      event.stopPropagation();
+      qrOverlay.setPointerCapture(event.pointerId);
+
+      const onPointerMove = moveEvent => {
+        setQrPosition(getCornerFromPointer(moveEvent));
+      };
+
+      const stopDrag = () => {
+        qrOverlay.removeEventListener('pointermove', onPointerMove);
+        qrOverlay.removeEventListener('pointerup', stopDrag);
+        qrOverlay.removeEventListener('pointercancel', stopDrag);
+      };
+
+      qrOverlay.addEventListener('pointermove', onPointerMove);
+      qrOverlay.addEventListener('pointerup', stopDrag);
+      qrOverlay.addEventListener('pointercancel', stopDrag);
+    }
+
+    function getResizeSizeFromPointer(event) {
+      const rect = displayArea.getBoundingClientRect();
+      const x = event.clientX - rect.left;
+      const y = event.clientY - rect.top;
+      const margin = parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--qr-margin')) || 24;
+
+      const anchor = {
+        'top-right': { x: rect.width - margin, y: margin },
+        'top-left': { x: margin, y: margin },
+        'bottom-right': { x: rect.width - margin, y: rect.height - margin },
+        'bottom-left': { x: margin, y: rect.height - margin }
+      }[qrPosition];
+
+      if (qrPosition === 'top-right') {
+        return Math.max(anchor.x - x, y - anchor.y);
+      }
+
+      if (qrPosition === 'top-left') {
+        return Math.max(x - anchor.x, y - anchor.y);
+      }
+
+      if (qrPosition === 'bottom-right') {
+        return Math.max(anchor.x - x, anchor.y - y);
+      }
+
+      return Math.max(x - anchor.x, anchor.y - y);
+    }
+
+    function startQrResize(event) {
+      event.preventDefault();
+      event.stopPropagation();
+      qrResizeHandle.setPointerCapture(event.pointerId);
+
+      const onPointerMove = moveEvent => {
+        setQrSize(getResizeSizeFromPointer(moveEvent));
+      };
+
+      const stopResize = () => {
+        qrResizeHandle.removeEventListener('pointermove', onPointerMove);
+        qrResizeHandle.removeEventListener('pointerup', stopResize);
+        qrResizeHandle.removeEventListener('pointercancel', stopResize);
+      };
+
+      qrResizeHandle.addEventListener('pointermove', onPointerMove);
+      qrResizeHandle.addEventListener('pointerup', stopResize);
+      qrResizeHandle.addEventListener('pointercancel', stopResize);
+    }
+
     textInput.addEventListener('input', updateText);
     sizeInput.addEventListener('input', updateSize);
+
+    clearTextButton.addEventListener('click', () => {
+      textInput.value = '';
+      localStorage.removeItem(STORAGE_TEXT_KEY);
+      updateText();
+      textInput.focus();
+    });
 
     fullscreenButton.addEventListener('click', async () => {
       document.body.classList.add('fullscreen');
@@ -236,6 +907,12 @@
       }
     });
 
+    document.addEventListener('fullscreenchange', () => {
+      if (!document.fullscreenElement) {
+        document.body.classList.remove('fullscreen');
+      }
+    });
+
     themeButton.addEventListener('click', () => {
       document.body.classList.toggle('light');
       themeButton.textContent = document.body.classList.contains('light')
@@ -245,9 +922,17 @@
       fitText();
     });
 
+    qrOverlay.addEventListener('click', event => event.stopPropagation());
+    qrOverlay.addEventListener('pointerdown', startQrDrag);
+    qrResizeHandle.addEventListener('pointerdown', startQrResize);
+
     window.addEventListener('resize', fitText);
 
-    updateText();
+    setQrPosition(qrPosition);
+    setQrSize(qrSize);
+    textInput.value = localStorage.getItem(STORAGE_TEXT_KEY) || '';
+    updateClearButton();
+    renderText();
     updateSize();
   </script>
 </body>

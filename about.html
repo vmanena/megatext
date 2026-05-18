@@ -84,6 +84,78 @@
       cursor: pointer;
     }
 
+
+    .advanced-help {
+      margin-top: 22px;
+      padding-top: 18px;
+      border-top: 1px solid rgba(255, 255, 255, 0.12);
+    }
+
+    .advanced-help summary {
+      display: inline-block;
+      color: #fde68a;
+      font-weight: 700;
+      font-size: 17px;
+      cursor: pointer;
+      list-style: none;
+    }
+
+    .advanced-help summary::-webkit-details-marker {
+      display: none;
+    }
+
+    .advanced-help summary::after {
+      content: " ▾";
+      color: var(--muted);
+      font-weight: 400;
+    }
+
+    .advanced-help[open] summary::after {
+      content: " ▴";
+    }
+
+    .advanced-help summary:hover {
+      text-decoration: underline;
+    }
+
+    .advanced-help-content {
+      margin-top: 16px;
+      padding: 18px 20px;
+      border-radius: 18px;
+      background: rgba(17, 24, 39, 0.35);
+    }
+
+    .advanced-help-content p {
+      margin-bottom: 12px;
+      font-size: 16px;
+      line-height: 1.55;
+    }
+
+    .advanced-help-content ul {
+      margin: 0 0 12px 1.2em;
+      padding: 0;
+      color: var(--muted);
+    }
+
+    .advanced-help-content li {
+      margin-bottom: 8px;
+      font-size: 16px;
+      line-height: 1.55;
+    }
+
+    .advanced-help-content code {
+      padding: 2px 6px;
+      border-radius: 6px;
+      background: rgba(0, 0, 0, 0.28);
+      color: var(--text);
+      font-size: 0.95em;
+      white-space: nowrap;
+    }
+
+    .advanced-help-content .example {
+      color: var(--text);
+    }
+
     @media (max-width: 700px) {
       .container {
         padding: 24px 16px;
@@ -113,6 +185,58 @@
        Jmenuji se <a href="https://manena.info">Václav Maněna</a> a tuto stránku jsem vytvořil jako podporu pro svou práci učitele a lektora. Budu rád, když pomůže i vám. Jestli mě chcete podpořit, kupte mi kafe. Čas, doména a hosting nejsou úplně zadarmo. 😀
       </p>
 	  <a href="https://www.buymeacoffee.com/vmanena"><img src="https://img.buymeacoffee.com/button-api/?text=Kupte&nbsp;mi&nbsp;kafe&emoji=☕&slug=vmanena&button_colour=FFDD00&font_colour=000000&font_family=Inter&outline_colour=000000&coffee_colour=ffffff" alt="Kupte mi kafe" /></a>
+      <details class="advanced-help">
+        <summary>Pokročilé funkce</summary>
+
+        <div class="advanced-help-content">
+          <p>
+            Do textu můžete vložit speciální značky začínající zavináčem. Aplikace je při zobrazení nahradí odpočtem (countdown - cd), stopkami (stopwatch - sw) nebo QR kódem (qr).
+          </p>
+
+          <ul>
+            <li>
+              <span class="example">Odpočet do času:</span>
+              <code>Přednáška začne za @cd:10:30</code>
+              zobrazí aktuální odpočet do 10:30.
+            </li>
+            <li>
+              <span class="example">Stopky od času:</span>
+              <code>Přednáška už běží @sw:10:30</code>
+              zobrazí, jak dlouho uplynulo od 10:30.
+            </li>
+            <li>
+              Čas se zadává jako <code>H:mm</code> nebo <code>H:mm:ss</code>, například <code>@cd:10:40</code> nebo <code>@sw:8:00:30</code>.
+            </li>
+          </ul>
+
+          <p>
+            U odpočtu i stopek lze doplnit vlastní textový formát do závorky. Pro časové údaje můžete použít <code>&amp;H</code>, <code>&amp;m</code> či <code>&amp;mm</code>, <code>&amp;ss</code>:
+            <code>Zbývá @cd:'7:45(&amp;m minut a &amp;ss sekund)'</code>
+          </p>
+
+          <ul>
+            <li>
+              <span class="example">QR kód:</span>
+              <code>Dotazník @qr:https://forms.office.com/abc</code>
+              zobrazí QR kód s odkazem.
+            </li>
+            <li>
+              Pokud má být adresa vidět i v textu, použijte za ní vykřičník:
+              <code>Otevřete @qr;MegaText.cz!</code>.
+              Do QR kódu se v takovém případě automaticky doplní <code>https://</code>, pokud protokol chybí.
+            </li>
+            <li>
+              Hodnotu s mezerami nebo zvláštními znaky dejte do apostrofů:
+              <code>@qr:'Text nebo platební příkaz se speciálními znaky'</code>.
+            </li>
+          </ul>
+
+          <p>
+            QR kód můžete na ploše přetáhnout do jiného rohu a tažením za úchyt změnit jeho velikost.
+          </p>
+        </div>
+      </details>
+
     </section>
 
     <div class="actions">

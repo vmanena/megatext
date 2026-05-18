@@ -5,14 +5,14 @@ Hodí se například pro rychlé zobrazení Wi-Fi hesla, URL adresy, krátké zp
 
 ## Funkce
 
-- psaní textu přímo do stránky
-- automatické zvětšení textu na maximální možnou velikost
-- automatické zmenšení textu, pokud by se nevešel na obrazovku
-- zachování ručně vložených řádků
-- režim celé obrazovky
-- světlý a tmavý režim
-- uložení textu, velikosti písma a motivu do prohlížeče
-- jednoduché ovládání bez instalace
+- Psaní textu přímo do stránky.
+- Automatické zvětšení textu na maximální možnou velikost.
+- Automatické zmenšení textu, pokud by se nevešel na obrazovku.
+- Zachování ručně vložených řádků.
+- Režim celé obrazovky.
+- Světlý a tmavý režim.
+- Uložení textu, velikosti písma a motivu do prohlížeče (plánovaná funkce).
+- Jednoduché ovládání bez instalace, možnost provozu offline.
 
 ## Použití
 

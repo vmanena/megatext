@@ -23,4 +23,4 @@ Hodí se například pro rychlé zobrazení Wi-Fi hesla, URL adresy, krátké zp
 
 ## Autoři
 
-Vytvořil a provozuje [Václav Maněna](https://manena.info), vyvíjí hlavně [Tomáš Musiol](https://www.musiol.cz).
+Vytvořil a provozuje [Václav Maněna](https://manena.info).

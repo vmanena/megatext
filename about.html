@@ -9,8 +9,7 @@
   <script>
     try {
       const savedTheme = localStorage.getItem('megatext:theme');
-      const prefersLight = matchMedia('(prefers-color-scheme: light)').matches;
-      if (savedTheme === 'light' || (!savedTheme && prefersLight)) {
+      if (savedTheme === 'light') {
         document.documentElement.dataset.theme = 'light';
         document.querySelector('meta[name="theme-color"]').content = '#ffffff';
       }

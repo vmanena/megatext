@@ -18,6 +18,10 @@ Text se ukládá pouze do `sessionStorage`, takže přežije obnovení stránky,
 
 Jde o statickou aplikaci bez sestavení a závislostí. Pro správnou funkci service workeru ji spouštějte přes lokální HTTP server, například `python3 -m http.server 8080`.
 
-## Autor
+## Podpora
 
-Vytvořil a provozuje [Václav Maněna](https://manena.info).
+MegaText je zdarma a bez reklam. Pokud vám dává smysl, můžete [podpořit jeho provoz a další vývoj](https://manena.info/podporit/).
+
+## Autoři
+
+Vytvořil, provozuje a vyvíjí [Václav Maněna](https://manena.info). S vývojem a designem pomáhá hlavně [Tomáš Musiol](https://www.musiol.cz).

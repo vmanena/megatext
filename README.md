@@ -23,6 +23,6 @@ Hodí se například pro rychlé zobrazení Wi-Fi hesla, URL adresy, krátké zp
 
 ## Autor
 
-Vytvořil a provozuje [Václav Maněna](https://manena.info).
+Vytvořil a provozuje [Václav Maněna](https://manena.info). Vyvíjí hlavně [Tomáš Musiol](https://github.com/kozleek).
 
-❤ **[Podpořit autora](https://manena.info/podporit)**
+❤ **[Podpořit Václav Maněnau](https://manena.info/podporit)**

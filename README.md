@@ -1,28 +1,23 @@
 # MegaText
-Nástroj na zobrazování krátkých textů přes celou obrazovku.
 
-Hodí se například pro rychlé zobrazení Wi-Fi hesla, URL adresy, krátké zprávy, instrukce nebo jiného textu, který má být dobře čitelný i z větší vzdálenosti.
+Jednoduchý nástroj pro zobrazení krátkého textu přes celou obrazovku. Hodí se například pro Wi-Fi heslo, URL adresu, krátkou zprávu nebo instrukci čitelnou z větší vzdálenosti.
 
 ## Funkce
 
-- Psaní textu přímo do stránky.
-- Automatické zvětšení textu na maximální možnou velikost.
-- Automatické zmenšení textu, pokud by se nevešel na obrazovku.
-- Zachování ručně vložených řádků.
-- Režim celé obrazovky.
-- Světlý a tmavý režim.
-- Uložení textu, velikosti písma a motivu do prohlížeče (plánovaná funkce).
-- Jednoduché ovládání bez instalace, možnost provozu offline.
+- automatické přizpůsobení velikosti textu obrazovce;
+- zachování ručně vložených řádků;
+- světlý a tmavý režim;
+- režim celé obrazovky;
+- ovládání na počítači i mobilu;
+- offline provoz po prvním načtení;
+- bez účtu, analytiky a externích knihoven.
 
-## Použití
+Text se ukládá pouze do `sessionStorage`, takže přežije obnovení stránky, ale po zavření karty se neuchovává. Motiv a zvolená maximální velikost písma se ukládají do `localStorage`.
 
-1. Otevřete aplikaci v prohlížeči.
-2. Klikněte do hlavní plochy a napište text.
-3. Pomocí nastavení upravte velikost písma nebo přepněte motiv.
-4. Klikněte na „Celá obrazovka“ pro zobrazení bez rušivých prvků.
+## Vývoj
+
+Jde o statickou aplikaci bez sestavení a závislostí. Pro správnou funkci service workeru ji spouštějte přes lokální HTTP server, například `python3 -m http.server 8080`.
 
 ## Autor
 
-Vytvořil a provozuje [Václav Maněna](https://manena.info). Vyvíjí hlavně [Tomáš Musiol](https://github.com/kozleek).
-
-❤ **[Podpořit Václav Maněnu](https://manena.info/podporit)**
+Vytvořil a provozuje [Václav Maněna](https://manena.info).

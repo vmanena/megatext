@@ -1,0 +1,12 @@
+{
+  "name":"MegaText",
+  "short_name":"MegaText",
+  "description":"Krátký text přes celou obrazovku.",
+  "lang":"cs",
+  "start_url":"./",
+  "scope":"./",
+  "display":"standalone",
+  "background_color":"#111827",
+  "theme_color":"#111827",
+  "icons":[{"src":"icon.svg","sizes":"any","type":"image/svg+xml","purpose":"any maskable"}]
+}

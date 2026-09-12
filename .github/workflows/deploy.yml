@@ -1,0 +1,60 @@
+name: Deploy MegaText.cz
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: deploy-megatext
+  cancel-in-progress: true
+
+jobs:
+  deploy:
+    name: Upload website over FTP
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Validate static files
+        run: |
+          node --check app.js
+          node -e "JSON.parse(require('fs').readFileSync('manifest.webmanifest', 'utf8'))"
+          test -s index.html
+          test -s about.html
+          test -s styles.css
+          test -s sw.js
+          test -s icon.svg
+
+      - name: Install FTP client
+        run: sudo apt-get update -qq && sudo apt-get install -y -qq lftp
+
+      - name: Upload MegaText.cz
+        env:
+          FTP_SERVER: ${{ secrets.FTP_SERVER }}
+          FTP_USERNAME: ${{ secrets.FTP_USERNAME }}
+          FTP_PASSWORD: ${{ secrets.FTP_PASSWORD }}
+        run: |
+          lftp -u "$FTP_USERNAME","$FTP_PASSWORD" "$FTP_SERVER" <<'FTP_COMMANDS'
+          set cmd:fail-exit yes
+          set ftp:ssl-allow no
+          set ftp:passive-mode yes
+          set net:max-retries 2
+          set net:timeout 20
+          cd /
+          put index.html
+          put about.html
+          put app.js
+          put styles.css
+          put manifest.webmanifest
+          put sw.js
+          put icon.svg
+          bye
+          FTP_COMMANDS

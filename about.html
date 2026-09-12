@@ -6,6 +6,16 @@
   <meta name="theme-color" content="#111827">
   <title>O aplikaci – MegaText</title>
   <link rel="icon" href="icon.svg" type="image/svg+xml">
+  <script>
+    try {
+      const savedTheme = localStorage.getItem('megatext:theme');
+      const prefersLight = matchMedia('(prefers-color-scheme: light)').matches;
+      if (savedTheme === 'light' || (!savedTheme && prefersLight)) {
+        document.documentElement.dataset.theme = 'light';
+        document.querySelector('meta[name="theme-color"]').content = '#ffffff';
+      }
+    } catch {}
+  </script>
   <link rel="stylesheet" href="styles.css">
 </head>
 <body class="info-page">

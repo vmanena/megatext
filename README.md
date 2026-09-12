@@ -18,7 +18,7 @@ Text se ukládá pouze do `sessionStorage`, takže přežije obnovení stránky,
 
 Jde o statickou aplikaci bez sestavení a závislostí. Pro správnou funkci service workeru ji spouštějte přes lokální HTTP server, například `python3 -m http.server 8080`.
 
-## Podpora
+## ❤️ Podpora
 
 MegaText je zdarma a bez reklam. Pokud vám dává smysl, můžete [podpořit jeho provoz a další vývoj](https://manena.info/podporit/).
 

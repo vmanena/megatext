@@ -29,7 +29,11 @@ function resizeTextarea(fontSize){
 
 function fits(fontSize){
   resizeTextarea(fontSize);
-  return message.scrollWidth<=display.clientWidth-2&&message.scrollHeight<=display.clientHeight-2;
+  const displayStyle=getComputedStyle(display);
+  const availableHeight=display.clientHeight
+    -parseFloat(displayStyle.paddingTop)
+    -parseFloat(displayStyle.paddingBottom);
+  return message.scrollWidth<=message.clientWidth+1&&message.scrollHeight<=availableHeight;
 }
 
 function fitText(){

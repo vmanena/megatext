@@ -13,7 +13,7 @@ button,input,textarea{font:inherit}button,a{-webkit-tap-highlight-color:transpar
 .button{display:inline-flex;align-items:center;justify-content:center;min-height:44px;padding:10px 16px;border:0;border-radius:11px;background:var(--accent);color:var(--accent-text);font-weight:750;text-decoration:none;cursor:pointer}
 .button:hover{filter:brightness(.94)}.button--secondary{background:var(--panel-hover);color:var(--text)}
 .settings-button{position:fixed;top:max(14px,env(safe-area-inset-top));right:max(14px,env(safe-area-inset-right));z-index:20;width:48px;height:48px;padding:12px;border:0;border-radius:50%;background:var(--panel);color:var(--text);box-shadow:0 5px 20px rgb(0 0 0/35%);cursor:pointer}
-.settings-button:hover{background:var(--panel-hover)}.settings-button svg{display:block;width:100%;height:100%;fill:currentColor;transition:transform .25s ease}.settings-button[aria-expanded="true"] svg{transform:rotate(60deg)}
+.settings-button:hover{background:var(--panel-hover)}.settings-button svg{display:block;width:100%;height:100%;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;transition:transform .25s ease}.settings-button[aria-expanded="true"] svg{transform:rotate(60deg)}
 .display{flex:1;min-height:0;display:grid;place-items:center;overflow:hidden;padding:clamp(20px,4vw,52px)}
 .message{display:block;width:100%;max-width:100%;height:auto;min-height:1.05em;padding:0;overflow:hidden;resize:none;border:0;outline:0;background:transparent;color:var(--text);font-size:220px;line-height:1.05;font-weight:900;letter-spacing:.01em;text-align:center;caret-color:var(--accent);white-space:pre}
 .message::placeholder{color:var(--muted);opacity:.45}

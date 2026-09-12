@@ -16,7 +16,7 @@ Text se ukládá pouze do `sessionStorage`, takže přežije obnovení stránky,
 
 ## Vývoj
 
-Jde o statickou aplikaci bez sestavení a závislostí. Pro správnou funkci service workeru ji spouštějte přes lokální HTTP server, například `python3 -m http.server 8080`.
+MegaText není potřeba instalovat ani sestavovat. Pokud si ho stáhnete do počítače a chcete využívat všechny funkce včetně provozu offline, spusťte ho přes jednoduchý lokální webový server. Ve složce s aplikací můžete použít například příkaz `python3 -m http.server 8080`. Pouhé otevření souboru `index.html` nemusí offline režim správně aktivovat.
 
 ## ❤️ Podpora
 

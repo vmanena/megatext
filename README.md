@@ -25,4 +25,4 @@ Hodí se například pro rychlé zobrazení Wi-Fi hesla, URL adresy, krátké zp
 
 Vytvořil a provozuje [Václav Maněna](https://manena.info).
 
-❤ **[Podpořit autora](https://manena.info/podporit).**
+❤ **[Podpořit autora](https://manena.info/podporit)**

@@ -98,7 +98,7 @@ document.addEventListener('fullscreenchange',()=>{
 window.addEventListener('resize',fitText);
 
 const savedTheme=storage.get('localStorage',keys.theme);
-applyTheme(savedTheme||(matchMedia('(prefers-color-scheme: light)').matches?'light':'dark'));
+applyTheme(savedTheme==='light'?'light':'dark');
 const savedSize=Number(storage.get('localStorage',keys.size));
 if(savedSize>=48&&savedSize<=320)sizeInput.value=String(savedSize);
 message.value=storage.get('sessionStorage',keys.text)||'';
